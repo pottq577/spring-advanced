@@ -3,6 +3,8 @@ package org.example.expert.domain.user.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.expert.domain.common.annotation.Auth;
 import org.example.expert.domain.common.dto.AuthUser;
+import org.example.expert.domain.common.response.ApiResponse;
+import org.example.expert.domain.common.response.CommonResponse;
 import org.example.expert.domain.user.dto.request.UserChangePasswordRequest;
 import org.example.expert.domain.user.dto.response.UserResponse;
 import org.example.expert.domain.user.service.UserService;
@@ -16,15 +18,15 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/users/{userId}")
-    public ResponseEntity<UserResponse> getUser(@PathVariable long userId) {
-        return ResponseEntity.ok(userService.getUser(userId));
+    public ApiResponse<UserResponse> getUser(@PathVariable long userId) {
+        return ApiResponse.ok(userService.getUser(userId));
     }
 
     @PutMapping("/users")
-    public void changePassword(
+    public ApiResponse<CommonResponse> changePassword(
         @Auth AuthUser authUser,
         @RequestBody UserChangePasswordRequest userChangePasswordRequest
     ) {
-        userService.changePassword(authUser.getId(), userChangePasswordRequest);
+        return ApiResponse.ok(userService.changePassword(authUser.getId(), userChangePasswordRequest));
     }
 }

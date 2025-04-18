@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.common.exception.ExceptionCode;
 import org.example.expert.domain.common.exception.InvalidRequestException;
+import org.example.expert.domain.common.response.CommonResponse;
 import org.example.expert.domain.manager.dto.request.ManagerSaveRequest;
 import org.example.expert.domain.manager.dto.response.ManagerResponse;
 import org.example.expert.domain.manager.dto.response.ManagerSaveResponse;
@@ -75,7 +76,7 @@ public class ManagerService {
     }
 
     @Transactional
-    public void deleteManager(long userId, long todoId, long managerId) {
+    public CommonResponse deleteManager(long userId, long todoId, long managerId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new InvalidRequestException(ExceptionCode.USER_NOT_FOUND));
 
@@ -94,5 +95,7 @@ public class ManagerService {
         }
 
         managerRepository.delete(manager);
+
+        return new CommonResponse("담당자 삭제 완료");
     }
 }

@@ -35,7 +35,8 @@ public enum ExceptionCode {
     FAIL_TO_GET_WEATHER_TODAY(HttpStatus.INTERNAL_SERVER_ERROR, "오늘에 해당하는 날씨 데이터를 찾을 수 없습니다."),
     TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "토큰 정보를 찾을 수 없습니다."),
     NOT_VALID_ERROR(HttpStatus.BAD_REQUEST, "Validation Exception 발생"),
-    SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 에러 발생");
+    SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 에러 발생"),
+    INVALID_USER_ROLE(HttpStatus.BAD_REQUEST, "유효하지 않은 UerRole");
 
     private final HttpStatus httpStatus;
     private final String message;

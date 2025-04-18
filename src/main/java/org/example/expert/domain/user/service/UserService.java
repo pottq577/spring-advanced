@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.expert.config.PasswordEncoder;
 import org.example.expert.domain.common.exception.ExceptionCode;
 import org.example.expert.domain.common.exception.InvalidRequestException;
+import org.example.expert.domain.common.response.CommonResponse;
 import org.example.expert.domain.user.dto.request.UserChangePasswordRequest;
 import org.example.expert.domain.user.dto.response.UserResponse;
 import org.example.expert.domain.user.entity.User;
@@ -26,7 +27,7 @@ public class UserService {
     }
 
     @Transactional
-    public void changePassword(long userId, UserChangePasswordRequest userChangePasswordRequest) {
+    public CommonResponse changePassword(long userId, UserChangePasswordRequest userChangePasswordRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new InvalidRequestException(ExceptionCode.USER_NOT_FOUND));
 
@@ -39,5 +40,7 @@ public class UserService {
         }
 
         user.changePassword(passwordEncoder.encode(userChangePasswordRequest.getNewPassword()));
+
+        return new CommonResponse("비밀번호 수정 완료");
     }
 }
