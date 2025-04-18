@@ -21,21 +21,21 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponse getUser(long userId) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new InvalidRequestException(ExceptionCode.USER_NOT_FOUND.getMessage()));
+            .orElseThrow(() -> new InvalidRequestException(ExceptionCode.USER_NOT_FOUND));
         return new UserResponse(user.getId(), user.getEmail());
     }
 
     @Transactional
     public void changePassword(long userId, UserChangePasswordRequest userChangePasswordRequest) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new InvalidRequestException(ExceptionCode.USER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new InvalidRequestException(ExceptionCode.USER_NOT_FOUND));
 
         if (passwordEncoder.matches(userChangePasswordRequest.getNewPassword(), user.getPassword())) {
-            throw new InvalidRequestException(ExceptionCode.NEW_PASSWORD_SAME_AS_OLD.getMessage());
+            throw new InvalidRequestException(ExceptionCode.NEW_PASSWORD_SAME_AS_OLD);
         }
 
         if (!passwordEncoder.matches(userChangePasswordRequest.getOldPassword(), user.getPassword())) {
-            throw new InvalidRequestException(ExceptionCode.PASSWORD_INCORRECT.getMessage());
+            throw new InvalidRequestException(ExceptionCode.PASSWORD_INCORRECT);
         }
 
         user.changePassword(passwordEncoder.encode(userChangePasswordRequest.getNewPassword()));

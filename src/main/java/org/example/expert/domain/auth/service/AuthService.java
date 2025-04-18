@@ -29,7 +29,7 @@ public class AuthService {
 
         // 초기에 조건 확인
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
-            throw new InvalidRequestException("이미 존재하는 이메일입니다.");
+            throw new InvalidRequestException(ExceptionCode.ALREADY_USED_EMAIL);
         }
 
         String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
@@ -48,11 +48,11 @@ public class AuthService {
     @Transactional(readOnly = true)
     public SigninResponse signin(SigninRequest signinRequest) {
         User user = userRepository.findByEmail(signinRequest.getEmail())
-            .orElseThrow(() -> new InvalidRequestException(ExceptionCode.NOT_SIGNUP_USER.getMessage()));
+            .orElseThrow(() -> new InvalidRequestException(ExceptionCode.NOT_SIGNUP_USER));
 
         // 로그인 시 이메일과 비밀번호가 일치하지 않을 경우 401을 반환합니다.
         if (!passwordEncoder.matches(signinRequest.getPassword(), user.getPassword())) {
-            throw new AuthException(ExceptionCode.PASSWORD_INCORRECT.getMessage());
+            throw new AuthException(ExceptionCode.PASSWORD_INCORRECT);
         }
 
         String bearerToken = jwtUtil.createToken(user.getId(), user.getEmail(), user.getUserRole());

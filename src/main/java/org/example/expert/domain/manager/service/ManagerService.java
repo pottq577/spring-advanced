@@ -34,17 +34,17 @@ public class ManagerService {
         // 일정을 만든 유저
         User user = User.fromAuthUser(authUser);
         Todo todo = todoRepository.findById(todoId)
-                .orElseThrow(() -> new InvalidRequestException(ExceptionCode.TODO_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new InvalidRequestException(ExceptionCode.TODO_NOT_FOUND));
 
         if (todo.getUser() == null || !ObjectUtils.nullSafeEquals(user.getId(), todo.getUser().getId())) {
-            throw new InvalidRequestException(ExceptionCode.INVALID_TODO_OWNER.getMessage());
+            throw new InvalidRequestException(ExceptionCode.INVALID_TODO_OWNER);
         }
 
         User managerUser = userRepository.findById(managerSaveRequest.getManagerUserId())
-                .orElseThrow(() -> new InvalidRequestException(ExceptionCode.MANAGER_USER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new InvalidRequestException(ExceptionCode.MANAGER_USER_NOT_FOUND));
 
         if (ObjectUtils.nullSafeEquals(user.getId(), managerUser.getId())) {
-            throw new InvalidRequestException(ExceptionCode.CANNOT_ASSIGN_SELF_AS_MANAGER.getMessage());
+            throw new InvalidRequestException(ExceptionCode.CANNOT_ASSIGN_SELF_AS_MANAGER);
         }
 
         Manager newManagerUser = new Manager(managerUser, todo);
@@ -59,7 +59,7 @@ public class ManagerService {
     @Transactional(readOnly = true)
     public List<ManagerResponse> getManagers(long todoId) {
         Todo todo = todoRepository.findById(todoId)
-                .orElseThrow(() -> new InvalidRequestException(ExceptionCode.TODO_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new InvalidRequestException(ExceptionCode.TODO_NOT_FOUND));
 
         List<Manager> managerList = managerRepository.findByTodoIdWithUser(todo.getId());
 
@@ -77,20 +77,20 @@ public class ManagerService {
     @Transactional
     public void deleteManager(long userId, long todoId, long managerId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new InvalidRequestException(ExceptionCode.USER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new InvalidRequestException(ExceptionCode.USER_NOT_FOUND));
 
         Todo todo = todoRepository.findById(todoId)
-                .orElseThrow(() -> new InvalidRequestException(ExceptionCode.TODO_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new InvalidRequestException(ExceptionCode.TODO_NOT_FOUND));
 
         if (todo.getUser() == null || !ObjectUtils.nullSafeEquals(user.getId(), todo.getUser().getId())) {
-            throw new InvalidRequestException(ExceptionCode.INVALID_TODO_OWNER.getMessage());
+            throw new InvalidRequestException(ExceptionCode.INVALID_TODO_OWNER);
         }
 
         Manager manager = managerRepository.findById(managerId)
-                .orElseThrow(() -> new InvalidRequestException(ExceptionCode.MANAGER_USER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new InvalidRequestException(ExceptionCode.MANAGER_USER_NOT_FOUND));
 
         if (!ObjectUtils.nullSafeEquals(todo.getId(), manager.getTodo().getId())) {
-            throw new InvalidRequestException(ExceptionCode.MANAGER_TODO_MISMATCH.getMessage());
+            throw new InvalidRequestException(ExceptionCode.MANAGER_TODO_MISMATCH);
         }
 
         managerRepository.delete(manager);

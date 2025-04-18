@@ -1,8 +1,22 @@
 package org.example.expert.domain.common.exception;
 
-public class ServerException extends RuntimeException {
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-    public ServerException(String message) {
-        super(message);
+@Getter
+@RequiredArgsConstructor
+public class ServerException extends BaseException {
+
+    private final ExceptionCode exceptionCode;
+
+    @Override
+    public ExceptionCode getExceptionCode(){
+        return exceptionCode;
     }
+
+    @Override
+    public String getMessage(){
+        return exceptionCode.getMessage();
+    }
+
 }
