@@ -8,6 +8,7 @@ import org.example.expert.domain.auth.dto.request.SignupRequest;
 import org.example.expert.domain.auth.dto.response.SigninResponse;
 import org.example.expert.domain.auth.dto.response.SignupResponse;
 import org.example.expert.domain.auth.exception.AuthException;
+import org.example.expert.domain.common.exception.ExceptionCode;
 import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.enums.UserRole;
@@ -46,13 +47,12 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public SigninResponse signin(SigninRequest signinRequest) {
-        User user = userRepository.findByEmail(signinRequest.getEmail()).orElseThrow(
-                () -> new InvalidRequestException("가입되지 않은 유저입니다.")
-        );
+        User user = userRepository.findByEmail(signinRequest.getEmail())
+            .orElseThrow(() -> new InvalidRequestException(ExceptionCode.NOT_SIGNUP_USER.getMessage()));
 
         // 로그인 시 이메일과 비밀번호가 일치하지 않을 경우 401을 반환합니다.
         if (!passwordEncoder.matches(signinRequest.getPassword(), user.getPassword())) {
-            throw new AuthException("잘못된 비밀번호입니다.");
+            throw new AuthException(ExceptionCode.PASSWORD_INCORRECT.getMessage());
         }
 
         String bearerToken = jwtUtil.createToken(user.getId(), user.getEmail(), user.getUserRole());
