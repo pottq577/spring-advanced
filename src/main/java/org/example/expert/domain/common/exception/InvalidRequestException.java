@@ -2,6 +2,7 @@ package org.example.expert.domain.common.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
@@ -14,4 +15,8 @@ public class InvalidRequestException extends BaseException {
         return exceptionCode.getMessage();
     }
 
+    @Override
+    public HttpStatus getStatus() {
+        return HttpStatus.BAD_REQUEST;
+    }
 }
