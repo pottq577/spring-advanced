@@ -1,7 +1,17 @@
 package org.example.expert.domain.common.exception;
 
-public class InvalidRequestException extends RuntimeException {
-    public InvalidRequestException(String message) {
-        super(message);
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
+public class InvalidRequestException extends BaseException {
+
+    private final ExceptionCode exceptionCode;
+
+    @Override
+    public String getMessage() {
+        return exceptionCode.getMessage();
     }
+
 }
