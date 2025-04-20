@@ -27,24 +27,18 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public CommentSaveResponse saveComment(AuthUser authUser, long todoId, CommentSaveRequest commentSaveRequest) {
+    public CommentSaveResponse saveComment(
+        AuthUser authUser, long todoId, CommentSaveRequest commentSaveRequest
+    ) {
         User user = User.fromAuthUser(authUser);
-        Todo todo = todoRepository.findById(todoId).orElseThrow(() ->
-                new InvalidRequestException(ExceptionCode.TODO_NOT_FOUND));
+        Todo todo = todoRepository.findById(todoId)
+            .orElseThrow(() -> new InvalidRequestException(ExceptionCode.TODO_NOT_FOUND));
 
-        Comment newComment = new Comment(
-                commentSaveRequest.getContents(),
-                user,
-                todo
-        );
-
+        Comment newComment = new Comment(commentSaveRequest.getContents(), user, todo);
         Comment savedComment = commentRepository.save(newComment);
 
-        return new CommentSaveResponse(
-                savedComment.getId(),
-                savedComment.getContents(),
-                new UserResponse(user.getId(), user.getEmail())
-        );
+        return new CommentSaveResponse(savedComment.getId(), savedComment.getContents(),
+            new UserResponse(user.getId(), user.getEmail()));
     }
 
     @Transactional(readOnly = true)
@@ -55,10 +49,10 @@ public class CommentService {
         for (Comment comment : commentList) {
             User user = comment.getUser();
             CommentResponse dto = new CommentResponse(
-                    comment.getId(),
-                    comment.getContents(),
-                    new UserResponse(user.getId(), user.getEmail())
-            );
+                comment.getId(),
+                comment.getContents(),
+                new UserResponse(user.getId(), user.getEmail()));
+
             dtoList.add(dto);
         }
         return dtoList;

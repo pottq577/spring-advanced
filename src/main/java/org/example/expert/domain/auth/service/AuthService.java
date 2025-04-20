@@ -35,9 +35,9 @@ public class AuthService {
         UserRole userRole = UserRole.of(signupRequest.getUserRole());
 
         User newUser = new User(
-                signupRequest.getEmail(),
-                encodedPassword,
-                userRole
+            signupRequest.getEmail(),
+            encodedPassword,
+            userRole
         );
         User savedUser = userRepository.save(newUser);
 
@@ -48,8 +48,8 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public SigninResponse signin(SigninRequest signinRequest) {
-        User user = userRepository.findByEmail(signinRequest.getEmail()).orElseThrow(
-                () -> new InvalidRequestException(ExceptionCode.NOT_SIGNUP_USER));
+        User user = userRepository.findByEmail(signinRequest.getEmail())
+            .orElseThrow(() -> new InvalidRequestException(ExceptionCode.NOT_SIGNUP_USER));
 
         // 로그인 시 이메일과 비밀번호가 일치하지 않을 경우 401을 반환합니다.
         if (!passwordEncoder.matches(signinRequest.getPassword(), user.getPassword())) {
