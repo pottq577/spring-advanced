@@ -1,5 +1,6 @@
 package org.example.expert.config;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,18 +9,18 @@ public class LogUtility {
     @Getter
     @AllArgsConstructor
     public static class LogInfo{
-        private String uuid;
+        private LocalDateTime requestTime;
         private String requestURI;
     }
 
     private static final ThreadLocal<LogInfo> REQUEST_INFO = new ThreadLocal<>();
 
-    public static void set(String uuid, String requestURI){
-        REQUEST_INFO.set(new LogInfo(uuid, requestURI));
+    public static void set(LocalDateTime requestTime, String requestURI){
+        REQUEST_INFO.set(new LogInfo(requestTime, requestURI));
     }
 
-    public static String getUUID(){
-        return REQUEST_INFO.get().getUuid();
+    public static LocalDateTime getRequestTime(){
+        return REQUEST_INFO.get().getRequestTime();
     }
 
     public static String getRequestURI(){
