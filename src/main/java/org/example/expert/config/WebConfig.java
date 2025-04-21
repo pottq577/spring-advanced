@@ -23,7 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new RequestInterceptor())
             .order(1)
-            .addPathPatterns("/admin")
+            .addPathPatterns("/admin/**")
             .excludePathPatterns("/error");
     }
 }
