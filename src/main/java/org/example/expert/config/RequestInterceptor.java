@@ -25,6 +25,8 @@ public class RequestInterceptor implements HandlerInterceptor {
     public void afterCompletion(
         HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex
     ) throws Exception {
+        log.info("Response {} [{}][{}]",
+            response.getStatus(), LogUtility.getRequestTime(), handler);
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
     }
 
